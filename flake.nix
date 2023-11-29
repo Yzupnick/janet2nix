@@ -23,6 +23,11 @@
           ];
       };
     in {
+      overlays = [
+        package_overlay
+        function_overlay
+        extra_packages
+      ];
       packages = {
         janetPackages = pkgs.janetPackages;
         default = janet2nix;

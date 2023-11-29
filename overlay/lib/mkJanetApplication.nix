@@ -16,10 +16,10 @@ stdenv.mkDerivation {
     pkgs.janet
     pkgs.jpm
   ];
+  buildInputs = map (p: p.package) withJanetPackages;
   buildPhase = ''
-    for p in $withJanetPackages; do
-        jpm install file://$p/
-    done
+    set -o xtrace
+    ${lib.strings.concatMapStrings (x: lib.strings.concatStrings ["jpm install file://" (toString x.package) "/\n" ]) withJanetPackages}
     jpm build
   '';
 

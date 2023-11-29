@@ -1,3 +1,6 @@
+(import spork/math)
+(use sh)
 
 (defn main [& args]
-  (print "hello nix"))
+  ($ echo "hello")
+  (print (math/factorial 3)))

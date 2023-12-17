@@ -33,10 +33,16 @@
         default = janet2nix;
       };
 
-      devshell = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         packages = [
-          pkgs.janet
-          pkgs.jpm
+          (pkgs.mkJanetTree {
+            name="janet2nix-dev";
+            withJanetPackages = [
+              pkgs.janetPackages.spork
+              pkgs.janetPackages.posix-spawn
+              pkgs.janetPackages.sh
+            ];
+          })
         ];
       };
    });

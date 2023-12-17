@@ -5,7 +5,7 @@ janet2nix is a set of tools for writing and packaging janet applications with an
 ## How to use
 See the [example repo](https://github.com/Yzupnick/example-janet2nix) for how to use in a flake.
 
-janet2nix provides 3 tools.
+janet2nix provides 4 tools.
 
 ### 1. mkJanetApplication
 `mkJanetApplication` accepts an attrset with 3 properties;
@@ -43,7 +43,25 @@ pkgs.mkJanetPackage {
     };
 ```
 
-### 3. janetPackages
+### 3. mkJanetTree
+`mkJanetTree` accepts an attrset with 2 properties;
+
+1. `name` - this should be the name of your final executable. The function currently looks for this name to copy to the `bin/` folder.
+3. `withJanetPackages` - this is a list of packages built using `mkJanetPackage`
+
+`mkJanetTree` will build a derivation that provides a janet and jpm binary with there path set to find any provided packages. `jpm install` is run for every package.
+
+```nix
+pkgs.mkJanetTree {
+    name = "example";
+    withJanetPackages = [
+      # Add any janet dependencies. These are made using mkJanetPackage
+      pkgs.janetPackages.spork
+    ];
+};
+```
+
+### 4. janetPackages
 Some jpm packages are pre-packaged here. 
 
 Current list includes:

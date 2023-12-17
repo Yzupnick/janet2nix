@@ -7,19 +7,26 @@
   propagatedBuildInputs ? [],
   withJanetPackages ? []
 }:
+let
+  janetEnv = pkgs.mkJanetTree {
+    name = lib.strings.concatStrings [name "-dev"];
+    withJanetPackages = withJanetPackages;
+  };
+in
+
 stdenv.mkDerivation {
   name = name;
   src = src;
   nativeBuildInputs = [
-    pkgs.git
+    janetEnv
     pkgs.makeWrapper
-    pkgs.janet
-    pkgs.jpm
   ];
-  buildInputs = map (p: p.package) withJanetPackages;
+  buildInputs = [
+    janetEnv
+    pkgs.makeWrapper
+  ];
   buildPhase = ''
     set -o xtrace
-    ${lib.strings.concatMapStrings (x: lib.strings.concatStrings ["jpm install file://" (toString x.package) "/\n" ]) withJanetPackages}
     jpm build
   '';
 

@@ -20,6 +20,5 @@ final: prev: {
                     prev.clang 
                     final.janet
                   ];
-                  postInstall = "wrapProgram $out/bin/jpm --add-flags '--headerpath=${final.janet}/include --libpath=${final.janet}/lib --ldflags=-L${prev.glibc}/lib '";
                 });
 }

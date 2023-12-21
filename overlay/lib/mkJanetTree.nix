@@ -20,11 +20,11 @@ stdenv.mkDerivation {
     ${lib.strings.concatMapStrings (x: lib.strings.concatStrings ["jpm -l install file://" (toString x.package) "/\n" ]) withJanetPackages}
 
     echo '#!/bin/sh' > janet
-    echo '${janet}/bin/janet "$@"' >> janet
+    echo '${pkgs.janet}/bin/janet "$@"' >> janet
     chmod +x janet
 
     echo '#!/bin/sh' > jpm
-    echo '${jpm}/bin/jpm "$@"' >> jpm
+    echo '${pkgs.jpm}/bin/jpm "$@"' >> jpm
     chmod +x jpm
   '';
 

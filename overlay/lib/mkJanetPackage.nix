@@ -7,7 +7,10 @@
   url,
   hash ? null,
   rev ? null,
-  withJanetPackages ? []
+  withJanetPackages ? [],
+  # This is a temporary hack to get judge installed with the "tag" style of dependencies. 
+  # TODO come up with an alternative method (probably bite the bullet and parse project.janet files and generate a nix file
+  manualTag ? "v1"
 }:
 {
   package = stdenv.mkDerivation {
@@ -23,10 +26,12 @@
     };
     buildPhase = ''
       set -o xtrace
+      cat project.janet
     ${lib.strings.concatMapStrings (x: lib.strings.concatStrings ["sed -i s#" (lib.strings.escapeShellArg x.url) "#file://" (lib.strings.escapeShellArg x.package) "#g project.janet\n" ]) withJanetPackages}
       git init
       git add .
       git -c user.name='nix' -c user.email='nix@nix' commit -m "dummy commit"
+      git tag ${manualTag}
     '';
     installPhase = ''
       mkdir -p $out/
